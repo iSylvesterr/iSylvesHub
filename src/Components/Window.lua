@@ -346,7 +346,7 @@ return function(Config)
 		MinimizeNotif = true
 		local Key = Library.MinimizeKeybind and Library.MinimizeKeybind.Value or Library.MinimizeKey.Name
 		Library:Notify({
-			Title = "Interface",
+			Title = "InterTes",
 			Content = "Press " .. Key .. " to toggle the interface, or click the gear icon to restore.",
 			Duration = 6
 		})
