@@ -315,18 +315,44 @@ return function(Config)
 	end)
 
 	function Window:Minimize()
-		Window.Minimized = not Window.Minimized
-		Window.Root.Visible = not Window.Minimized
-		if not MinimizeNotif then
-			MinimizeNotif = true
-			local Key = Library.MinimizeKeybind and Library.MinimizeKeybind.Value or Library.MinimizeKey.Name
-			Library:Notify({
-				Title = "Interface",
-				Content = "Press " .. Key .. " to toggle the interface.",
-				Duration = 6
-			})
-		end
+	Window.Minimized = not Window.Minimized
+	Window.Root.Visible = not Window.Minimized
+
+	local CoreGui = game:GetService("CoreGui")
+
+	if Window.Minimized then
+		-- Buat icon restore di pojok kanan bawah
+		local IconButton = Instance.new("ImageButton")
+		IconButton.Name = "iSylHubRestoreButton"
+		IconButton.Size = UDim2.new(0, 45, 0, 45)
+		IconButton.Position = UDim2.new(1, -60, 1, -60)
+		IconButton.AnchorPoint = Vector2.new(1, 1)
+		IconButton.BackgroundTransparency = 1
+		IconButton.Image = "rbxassetid://6031068433" -- icon gear
+		IconButton.ZIndex = 999
+		IconButton.Parent = CoreGui
+
+		IconButton.MouseButton1Click:Connect(function()
+			Window.Minimized = false
+			Window.Root.Visible = true
+			IconButton:Destroy()
+		end)
+	else
+		local oldIcon = CoreGui:FindFirstChild("iSylHubRestoreButton")
+		if oldIcon then oldIcon:Destroy() end
 	end
+
+	if not MinimizeNotif then
+		MinimizeNotif = true
+		local Key = Library.MinimizeKeybind and Library.MinimizeKeybind.Value or Library.MinimizeKey.Name
+		Library:Notify({
+			Title = "Interface",
+			Content = "Press " .. Key .. " to toggle the interface, or click the gear icon to restore.",
+			Duration = 6
+		})
+	     
+		end
+    end
 
 	function Window:Destroy()
 		if require(Root).UseAcrylic then
