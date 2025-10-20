@@ -1,9 +1,14 @@
--- iSylvesHub Bootstrapper
--- Auto-load all required modules from /src folder
--- by iSylvester 🌀
+--[[ 
+    Auto-loader version for Fluent
+    by iSylvester (modified from Dawid's original)
+]]
 
-local base = "https://raw.githubusercontent.com/iSylvesterr/iSylvesHub/master/src/"
+local Library = {}
 
+-- Folder src tempat semua module disimpan
+local baseUrl = "https://raw.githubusercontent.com/iSylvesterr/iSylvesHub/master/src/"
+
+-- Semua file module yang perlu diload otomatis
 local modules = {
     "Creator",
     "Acrylic",
@@ -15,30 +20,19 @@ local modules = {
     "Window"
 }
 
-local cache = {}
-
-local function fetch(name)
-    if cache[name] then return cache[name] end
-    local url = base .. name .. ".lua"
-    local ok, src = pcall(function()
-        return game:HttpGet(url)
+-- Fetch semua module dari GitHub kamu
+for _, moduleName in ipairs(modules) do
+    local success, result = pcall(function()
+        local src = game:HttpGet(baseUrl .. moduleName .. ".lua")
+        local func = loadstring(src)
+        local module = func()
+        Library[moduleName] = module
     end)
-    if not ok then
-        error("❌ Gagal fetch: " .. name .. " (" .. tostring(src) .. ")")
+
+    if not success then
+        warn("[iSylHub] Failed to load module:", moduleName, result)
     end
-    local f, err = loadstring(src)
-    if not f then
-        error("⚠️ loadstring error di " .. name .. ": " .. tostring(err))
-    end
-    local result = f()
-    cache[name] = result
-    return result
 end
 
--- Load semua modul yang diperlukan
-for _, name in ipairs(modules) do
-    fetch(name)
-end
-
--- Return modul utama (Window)
-return fetch("Window")
+-- Return Library agar bisa dipake di luar
+return Library
