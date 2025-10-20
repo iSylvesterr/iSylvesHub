@@ -8,6 +8,7 @@ local modules = {
     "Creator",
     "Acrylic",
     "Assets",
+    "Theme",
     "TitleBar",
     "Tab",
     "Dialog",
