@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "init.lua",
-  "scripts": {
-    "rojo": "mkdirp dist && rojo build -o dist/main.rbxm",
-    "bundle": "pnpm run rojo && lune build"
+"scripts": {
+  "clean": "rm -rf dist",
+  "rojo-build": "rojo build -o build/init.luau",
+  "darklua": "darklua process build/init.luau dist/main.lua",
+  "postminify": "node build_obf.js dist/main.lua dist/main.min.lua dist/main.obf.lua",
+  "build": "npm run clean && npm run rojo-build && npm run darklua && npm run postminify"
   },
   "keywords": [],
   "author": "dawid",
